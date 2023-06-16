@@ -6,7 +6,7 @@ from game.utils.constants import BULLET_PLAYER, BULLET_PLAYER_TYPE
 class BulletPlayer(Bullet):
     WIDTH = 10
     HEIGHT = 20
-    SPEED = 20
+    SPEED = 5
 
     def __init__(self, center):
         self.image = BULLET_PLAYER

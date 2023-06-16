@@ -22,6 +22,7 @@ class Game:
         self.enemy_handler = EnemyHandler()
         self.bullet_handler = BulletHandler()
         self.score = 0
+        self.number_death = 0
 
     def run(self):
         # Game loop: events - update - draw
@@ -48,19 +49,20 @@ class Game:
             self.player.update(user_input, self.bullet_handler)
             self.enemy_handler.update(self.bullet_handler)
             self.bullet_handler.update(self.player, self.enemy_handler.enemies)
+            self.score = self.enemy_handler.number_enemy_destroyed
             if not self.player.is_alive:
                 pygame.time.delay(300)
                 self.playing = False
+                self.number_death += 1
 
     def draw(self):
         self.draw_background()
         if self.playing:
             self.clock.tick(FPS)
-            self.draw_score()
-            # self.screen.fill((255, 255, 255))
             self.player.draw(self.screen)
             self.enemy_handler.draw(self.screen)
             self.bullet_handler.draw(self.screen)
+            self.draw_score()
         else:
             self.draw_menu()
         pygame.display.update()
@@ -77,12 +79,18 @@ class Game:
         self.y_pos_bg += self.game_speed
 
     def draw_menu(self):
-        text, text_rect = text_utils.get_message('Press any Key to Start', 30, WHITE_COLOR)
-        self.screen.blit(text, text_rect)
+        if self.number_death == 0:
+            text, text_rect = text_utils.get_message('Press any Key to Start', 30, WHITE_COLOR)
+            self.screen.blit(text, text_rect)
+        else:
+            text, text_rect = text_utils.get_message('Press any Key to Restart', 30, WHITE_COLOR)
+            score, score_rect = text_utils.get_message(f'Your score is: {self.score}', 30, WHITE_COLOR, height=SCREEN_HEIGHT//2 +50)
+            self.screen.blit(text, text_rect)
+            self.screen.blit(score, score_rect)
 
     def draw_score(self):
-        text, text_rect = text_utils.get_message('Score:', 20, WHITE_COLOR, SCREEN_WIDTH - 100, 50)
-        self.screen.blit(text, text_rect)
+        score, score_rect = text_utils.get_message(f"Score: {self.score}", 20, WHITE_COLOR, SCREEN_WIDTH - 100, 50)
+        self.screen.blit(score, score_rect)
 
     def reset(self):
         self.player.reset()
