@@ -5,7 +5,6 @@ class EnemyHandler:
     def __init__(self):
         self.enemies = []
         self.number_enemy_destroyed = 0
-        # self.enemies.append(Ship())
 
     def update(self, bullet_handler):
         self.add_enemy()

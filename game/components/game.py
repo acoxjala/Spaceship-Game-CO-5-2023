@@ -45,9 +45,9 @@ class Game:
     def update(self):
         if self.playing:
             user_input = pygame.key.get_pressed()
-            self.player.update(user_input)
+            self.player.update(user_input, self.bullet_handler)
             self.enemy_handler.update(self.bullet_handler)
-            self.bullet_handler.update(self.player)
+            self.bullet_handler.update(self.player, self.enemy_handler)
             if not self.player.is_alive:
                 pygame.time.delay(300)
                 self.playing = False
@@ -56,6 +56,7 @@ class Game:
         self.draw_background()
         if self.playing:
             self.clock.tick(FPS)
+            self.draw_score()
             # self.screen.fill((255, 255, 255))
             self.player.draw(self.screen)
             self.enemy_handler.draw(self.screen)
@@ -77,6 +78,10 @@ class Game:
 
     def draw_menu(self):
         text, text_rect = text_utils.get_message('Press any Key to Start', 30, WHITE_COLOR)
+        self.screen.blit(text, text_rect)
+
+    def draw_score(self):
+        text, text_rect = text_utils.get_message('Score:', 20, WHITE_COLOR, SCREEN_WIDTH - 100, 50)
         self.screen.blit(text, text_rect)
 
     def reset(self):
